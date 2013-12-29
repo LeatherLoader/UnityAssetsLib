@@ -40,6 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileTypes\AssetHeader.cs" />
+    <Compile Include="FileTypes\External.cs" />
+    <Compile Include="FileTypes\ObjectInfo.cs" />
+    <Compile Include="ObjTypes\IUnityType.cs" />
+    <Compile Include="ObjTypes\MonoBehaviour.cs" />
+    <Compile Include="ObjTypes\MonoScript.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SwappableEndianBinaryReader.cs" />
     <Compile Include="SwappableEndianBinaryWriter.cs" />
