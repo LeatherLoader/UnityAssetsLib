@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnityAssetsLib.ObjTypes
 {
-    public class MonoScript : IUnityType
+    public class MonoScript : KnownType
     {
         private string mScriptName;
         private int mExecutionOrder;
@@ -15,7 +15,11 @@ namespace UnityAssetsLib.ObjTypes
         private string mNamespace;
         public string Assembly { get; set; }
         private byte mIsEditorScript;
-        private FileTypes.ObjectInfo mInfo;
+
+        public MonoScript()
+        {
+
+        }
 
         public MonoScript(string scriptName, int executionOrder, uint propertiesHash, string className, string nmSpace, string assembly, byte isEditorScript)
         {
@@ -28,19 +32,7 @@ namespace UnityAssetsLib.ObjTypes
             mIsEditorScript = isEditorScript;
         }
 
-        public FileTypes.ObjectInfo Info
-        {
-            get
-            {
-                return mInfo;
-            }
-            set
-            {
-                mInfo = value;
-            }
-        }
-
-        public uint CalculateSize()
+        public override uint CalculateSize()
         {
             //Size of static fields
             uint size = 9;
@@ -53,7 +45,7 @@ namespace UnityAssetsLib.ObjTypes
             return size;
         }
 
-        public void Write(SwappableEndianBinaryWriter writer)
+        public override void Write(SwappableEndianBinaryWriter writer)
         {
             writer.WriteUnityString(this.mScriptName);
             writer.Write(this.mExecutionOrder);
@@ -63,20 +55,20 @@ namespace UnityAssetsLib.ObjTypes
             writer.WriteUnityString(this.Assembly);
             writer.Write(this.mIsEditorScript);
 
-            uint remainingSize = UnityHelper.ByteAlign(CalculateSize(), 8) - CalculateSize();
-
-            for (uint i = 0; i < remainingSize; i++) { writer.Write((byte)0); }
+            base.Write(writer);
         }
 
-
-        public int GetClassId()
+        public override void Read(SwappableEndianBinaryReader reader)
         {
-            return 115;
-        }
+            this.mScriptName = reader.ReadUnityString();
+            this.mExecutionOrder = reader.ReadInt32();
+            this.mPropertiesHash = reader.ReadUInt32();
+            this.mClassName = reader.ReadUnityString();
+            this.mNamespace = reader.ReadUnityString();
+            this.Assembly = reader.ReadUnityString();
+            this.mIsEditorScript = reader.ReadByte();
 
-        public int GetTypeId()
-        {
-            return 115;
+            base.Read(reader);
         }
     }
 }

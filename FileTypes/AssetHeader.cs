@@ -42,7 +42,7 @@ namespace UnityAssetsLib.FileTypes
             this.Externals.Add(ext);
         }
 
-        public void AddObject(IUnityType obj)
+        public void AddObject(UnityType obj, int typeId, int classId)
         {
             uint nextOffset = 0;
 
@@ -53,7 +53,7 @@ namespace UnityAssetsLib.FileTypes
                 nextOffset = UnityHelper.ByteAlign(lastInfo.NewOffset + lastInfo.NewSize, 8);
             }
 
-            ObjectInfo info = new ObjectInfo() { NewOffset = nextOffset, NewSize = obj.CalculateSize(), TypeId = obj.GetTypeId(), ClassId = obj.GetClassId(), Index = (uint)(mObjectInfos.Count + 1) };
+            ObjectInfo info = new ObjectInfo() { NewOffset = nextOffset, NewSize = obj.CalculateSize(), TypeId = typeId, ClassId = classId, Index = (uint)(mObjectInfos.Count + 1) };
             mObjectInfos.Add(info);
             obj.Info = info;
         }

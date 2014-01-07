@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnityAssetsLib.ObjTypes
 {
-    public class MonoBehaviour : IUnityType
+    public class MonoBehaviour : KnownType
     {
         private bool mEnabled;
         private uint mGameObjectFileIndex;
@@ -14,7 +14,11 @@ namespace UnityAssetsLib.ObjTypes
         private uint mScriptFileIndex;
         private uint mScriptLocalIndex;
         private string mScriptName;
-        private FileTypes.ObjectInfo mInfo;
+
+        public MonoBehaviour()
+        {
+
+        }
 
         public MonoBehaviour(uint goFileIndex, uint goLocalIndex, uint scriptFileIndex, uint scriptLocalIndex, string scriptName)
         {
@@ -26,26 +30,14 @@ namespace UnityAssetsLib.ObjTypes
             mScriptName = scriptName;
         }
 
-        public FileTypes.ObjectInfo Info
-        {
-            get
-            {
-                return mInfo;
-            }
-            set
-            {
-                mInfo = value;
-            }
-        }
-
-        public uint CalculateSize()
+        public override uint CalculateSize()
         {
             uint size = 24;
             size += UnityHelper.ByteAlign((uint)mScriptName.Length, 4);
             return size;
         }
 
-        public void Write(SwappableEndianBinaryWriter writer)
+        public override void Write(SwappableEndianBinaryWriter writer)
         {
             writer.Write(mGameObjectFileIndex);
             writer.Write(mGameObjectLocalIndex);
@@ -55,19 +47,19 @@ namespace UnityAssetsLib.ObjTypes
             writer.Write(mScriptLocalIndex);
             writer.WriteUnityString(mScriptName);
 
-            uint remainingSize = UnityHelper.ByteAlign(CalculateSize(), 8) - CalculateSize();
-
-            for (uint i = 0; i < remainingSize; i++) { writer.Write((byte)0); }
+            base.Write(writer);
         }
 
-        public int GetClassId()
+        public override void Read(SwappableEndianBinaryReader reader)
         {
-            return 114;
-        }
+            mGameObjectFileIndex = reader.ReadUInt32();
+            mGameObjectLocalIndex = reader.ReadUInt32();
+            mEnabled = (reader.ReadUInt32() != 0);
+            mScriptFileIndex = reader.ReadUInt32();
+            mScriptLocalIndex = reader.ReadUInt32();
+            mScriptName = reader.ReadUnityString();
 
-        public int GetTypeId()
-        {
-            return -1;
+            base.Read(reader);
         }
     }
 }
