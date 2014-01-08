@@ -25,7 +25,7 @@ namespace UnityAssetsLib.ObjTypes
                 size += 4 + UnityHelper.ByteAlign((uint)assembly.Length, 4);
             }
 
-            return size;
+            return size + base.CalculateSize();
         }
 
         public override void Write(SwappableEndianBinaryWriter writer)

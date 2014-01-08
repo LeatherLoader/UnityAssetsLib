@@ -112,6 +112,8 @@ namespace UnityAssetsLib.FileTypes
                 external.Read(reader);
                 this.Externals.Add(external);
             }
+
+            while (reader.BaseStream.Position < OldDataStart) { reader.ReadByte(); }
         }
 
         public void Write(SwappableEndianBinaryWriter writer)

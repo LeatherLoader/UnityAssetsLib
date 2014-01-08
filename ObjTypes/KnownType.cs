@@ -16,7 +16,7 @@ namespace UnityAssetsLib.ObjTypes
 
         public override uint CalculateSize()
         {
-            return 0;
+            return (uint)mAdditionalData.Length;
         }
 
         public override void Write(SwappableEndianBinaryWriter writer)
@@ -36,7 +36,7 @@ namespace UnityAssetsLib.ObjTypes
                 mAdditionalData = reader.ReadBytes((int)(this.Info.OldSize - this.CalculateSize()));
             }
 
-            uint remainingSize = UnityHelper.ByteAlign(CalculateSize(), 8) - CalculateSize();
+            uint remainingSize = UnityHelper.ByteAlign(this.Info.OldSize, 8) - this.Info.OldSize;
 
             for (uint i = 0; i < remainingSize; i++) { reader.ReadByte(); }
         }

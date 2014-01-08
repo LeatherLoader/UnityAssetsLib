@@ -26,11 +26,17 @@ namespace UnityAssetsLib.FileTypes
                 UnityType type = null;
                 switch (info.ClassId)
                 {
+                    case 1:
+                        type = new GameObject();
+                        break;
                     case 114:
                         type = new MonoBehaviour();
                         break;
                     case 115:
                         type = new MonoScript();
+                        break;
+                    case 116:
+                        type = new MonoManager();
                         break;
                     default:
                         type = new UnknownType();
@@ -38,6 +44,7 @@ namespace UnityAssetsLib.FileTypes
                 }
                 type.Info = info;
                 type.Read(reader);
+                Objects.Add(type);
             }
         }
 

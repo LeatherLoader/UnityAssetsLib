@@ -9,10 +9,10 @@ namespace UnityAssetsLib.ObjTypes
     public class MonoBehaviour : KnownType
     {
         private bool mEnabled;
-        private uint mGameObjectFileIndex;
-        private uint mGameObjectLocalIndex;
-        private uint mScriptFileIndex;
-        private uint mScriptLocalIndex;
+        public uint GameObjectFileIndex { get; private set; }
+        public uint GameObjectLocalIndex { get; private set; }
+        public uint ScriptFileIndex { get; private set; }
+        public uint ScriptLocalIndex { get; private set; }
         private string mScriptName;
 
         public MonoBehaviour()
@@ -23,10 +23,10 @@ namespace UnityAssetsLib.ObjTypes
         public MonoBehaviour(uint goFileIndex, uint goLocalIndex, uint scriptFileIndex, uint scriptLocalIndex, string scriptName)
         {
             mEnabled = true;
-            mGameObjectFileIndex = goFileIndex;
-            mGameObjectLocalIndex = goLocalIndex;
-            mScriptFileIndex = scriptFileIndex;
-            mScriptLocalIndex = scriptLocalIndex;
+            GameObjectFileIndex = goFileIndex;
+            GameObjectLocalIndex = goLocalIndex;
+            ScriptFileIndex = scriptFileIndex;
+            ScriptLocalIndex = scriptLocalIndex;
             mScriptName = scriptName;
         }
 
@@ -34,17 +34,17 @@ namespace UnityAssetsLib.ObjTypes
         {
             uint size = 24;
             size += UnityHelper.ByteAlign((uint)mScriptName.Length, 4);
-            return size;
+            return size + base.CalculateSize();
         }
 
         public override void Write(SwappableEndianBinaryWriter writer)
         {
-            writer.Write(mGameObjectFileIndex);
-            writer.Write(mGameObjectLocalIndex);
+            writer.Write(GameObjectFileIndex);
+            writer.Write(GameObjectLocalIndex);
             writer.Write(mEnabled);
             for (int i = 0; i < 3; i++) { writer.Write((byte)0); }
-            writer.Write(mScriptFileIndex);
-            writer.Write(mScriptLocalIndex);
+            writer.Write(ScriptFileIndex);
+            writer.Write(ScriptLocalIndex);
             writer.WriteUnityString(mScriptName);
 
             base.Write(writer);
@@ -52,11 +52,11 @@ namespace UnityAssetsLib.ObjTypes
 
         public override void Read(SwappableEndianBinaryReader reader)
         {
-            mGameObjectFileIndex = reader.ReadUInt32();
-            mGameObjectLocalIndex = reader.ReadUInt32();
+            GameObjectFileIndex = reader.ReadUInt32();
+            GameObjectLocalIndex = reader.ReadUInt32();
             mEnabled = (reader.ReadUInt32() != 0);
-            mScriptFileIndex = reader.ReadUInt32();
-            mScriptLocalIndex = reader.ReadUInt32();
+            ScriptFileIndex = reader.ReadUInt32();
+            ScriptLocalIndex = reader.ReadUInt32();
             mScriptName = reader.ReadUnityString();
 
             base.Read(reader);

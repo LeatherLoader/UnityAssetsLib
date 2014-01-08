@@ -44,6 +44,7 @@
     <Compile Include="FileTypes\AssetsFile.cs" />
     <Compile Include="FileTypes\External.cs" />
     <Compile Include="FileTypes\ObjectInfo.cs" />
+    <Compile Include="ObjTypes\GameObject.cs" />
     <Compile Include="ObjTypes\KnownType.cs" />
     <Compile Include="ObjTypes\UnityType.cs" />
     <Compile Include="ObjTypes\MonoBehaviour.cs" />
