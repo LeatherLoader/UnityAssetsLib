@@ -30,6 +30,7 @@ namespace UnityAssetsLib.ObjTypes
             mNamespace = nmSpace;
             Assembly = assembly;
             mIsEditorScript = isEditorScript;
+            this.Info = new FileTypes.ObjectInfo() { ClassId = 115, TypeId = 115 };
         }
 
         public override uint CalculateSize()

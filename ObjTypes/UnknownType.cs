@@ -34,7 +34,7 @@ namespace UnityAssetsLib.ObjTypes
 
         public override void Read(SwappableEndianBinaryReader reader)
         {
-            mData = reader.ReadBytes((int)this.Info.OldSize);
+            mData = reader.ReadBytes((int)this.Info.Size);
 
             uint padding = UnityHelper.ByteAlign((uint)mData.Length, 8) - (uint)mData.Length;
 

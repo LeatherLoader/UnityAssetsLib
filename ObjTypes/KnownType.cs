@@ -24,19 +24,19 @@ namespace UnityAssetsLib.ObjTypes
             if (mAdditionalData.Length > 0)
                 writer.Write(mAdditionalData);
 
-            uint remainingSize = UnityHelper.ByteAlign(this.Info.NewSize, 8) - this.Info.NewSize;
+            uint remainingSize = UnityHelper.ByteAlign(this.Info.Size, 8) - this.Info.Size;
 
             for (uint i = 0; i < remainingSize; i++) { writer.Write((byte)0); }
         }
 
         public override void Read(SwappableEndianBinaryReader reader)
         {
-            if (this.Info.OldSize > this.CalculateSize())
+            if (this.Info.Size > this.CalculateSize())
             {
-                mAdditionalData = reader.ReadBytes((int)(this.Info.OldSize - this.CalculateSize()));
+                mAdditionalData = reader.ReadBytes((int)(this.Info.Size - this.CalculateSize()));
             }
 
-            uint remainingSize = UnityHelper.ByteAlign(this.Info.OldSize, 8) - this.Info.OldSize;
+            uint remainingSize = UnityHelper.ByteAlign(this.Info.Size, 8) - this.Info.Size;
 
             for (uint i = 0; i < remainingSize; i++) { reader.ReadByte(); }
         }

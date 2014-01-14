@@ -50,6 +50,7 @@ namespace UnityAssetsLib.FileTypes
 
         public void Write(SwappableEndianBinaryWriter writer)
         {
+            this.Header.ReIndex(this.Objects);
             this.Header.Write(writer);
 
             foreach (UnityType data in this.Objects)

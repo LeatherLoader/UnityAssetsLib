@@ -28,6 +28,7 @@ namespace UnityAssetsLib.ObjTypes
             ScriptFileIndex = scriptFileIndex;
             ScriptLocalIndex = scriptLocalIndex;
             mScriptName = scriptName;
+            this.Info = new FileTypes.ObjectInfo() { ClassId = 114, TypeId = -1 };
         }
 
         public override uint CalculateSize()

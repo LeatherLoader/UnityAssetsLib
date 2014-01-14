@@ -10,10 +10,8 @@ namespace UnityAssetsLib.FileTypes
     public class ObjectInfo
     {
         public uint Index { get; set; }
-        public uint OldOffset { get; set; }
-        public uint OldSize { get; set; }
-        public uint NewOffset { get; set; }
-        public uint NewSize { get; set; }
+        public uint Offset { get; set; }
+        public uint Size { get; set; }
         public int TypeId { get; set; }
         public int ClassId { get; set; }
 
@@ -25,20 +23,17 @@ namespace UnityAssetsLib.FileTypes
         public void Read(SwappableEndianBinaryReader reader)
         {
             this.Index = reader.ReadUInt32();
-            this.OldOffset = reader.ReadUInt32();
-            this.OldSize = reader.ReadUInt32();
+            this.Offset = reader.ReadUInt32();
+            this.Size = reader.ReadUInt32();
             this.TypeId = reader.ReadInt32();
             this.ClassId = reader.ReadInt32();
-
-            this.NewOffset = OldOffset;
-            this.NewSize = OldSize;
         }
 
         public void Write(BinaryWriter writer)
         {
             writer.Write(this.Index);
-            writer.Write(this.NewOffset);
-            writer.Write(this.NewSize);
+            writer.Write(this.Offset);
+            writer.Write(this.Size);
             writer.Write(this.TypeId);
             writer.Write(this.ClassId);
         }

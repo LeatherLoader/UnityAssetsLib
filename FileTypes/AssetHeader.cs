@@ -31,46 +31,25 @@ namespace UnityAssetsLib.FileTypes
         {
             get
             {
-                return mObjectInfos.OrderBy(o => o.NewOffset);
+                return mObjectInfos.OrderBy(o => o.Offset);
             }
         }
 
-        public void AddAnonymousExternal(string external)
+        public void ReIndex(List<UnityType> objects)
         {
-            //Add new external to externals list
-            External ext = new External() { Name = external };
-            this.Externals.Add(ext);
-        }
+            this.mObjectInfos.Clear();
 
-        public void AddObject(UnityType obj, int typeId, int classId)
-        {
-            uint nextOffset = 0;
-
-            if (mObjectInfos.Count > 0)
-            {
-                ObjectInfo lastInfo = mObjectInfos.OrderByDescending(o => o.NewOffset).FirstOrDefault();
-
-                nextOffset = UnityHelper.ByteAlign(lastInfo.NewOffset + lastInfo.NewSize, 8);
-            }
-
-            ObjectInfo info = new ObjectInfo() { NewOffset = nextOffset, NewSize = obj.CalculateSize(), TypeId = typeId, ClassId = classId, Index = (uint)(mObjectInfos.Count + 1) };
-            mObjectInfos.Add(info);
-            obj.Info = info;
-        }
-
-        public void AdjustObjectSize(int objectIndex, uint sizeAdjustment)
-        {
-            //Shift all the object infos offsets to match the new size of the GO we're adding to
             uint offset = 0;
-            foreach (ObjectInfo info in mObjectInfos)
+            uint index = 1;
+            foreach (UnityType type in objects)
             {
-                if (info.Index == objectIndex)
-                {
-                    info.NewSize += sizeAdjustment;
-                }
+                ObjectInfo info = new ObjectInfo() { ClassId = type.Info.ClassId, TypeId = type.Info.TypeId, Index = index, Offset = offset, Size = type.CalculateSize() };
+                index++;
+                offset += info.Size;
+                offset = UnityHelper.ByteAlign(offset, 8);
 
-                info.NewOffset = offset;
-                offset = UnityHelper.ByteAlign(offset + info.NewSize, 8);
+                type.Info = info;
+                this.mObjectInfos.Add(info);
             }
         }
 
@@ -134,8 +113,8 @@ namespace UnityAssetsLib.FileTypes
             //Don't start less than 4k into the file
             if (NewDataStart < 0x1000) { NewDataStart = 0x1000; }
 
-            ObjectInfo lastObject = mObjectInfos.OrderByDescending(o => o.NewOffset).FirstOrDefault();
-            uint dataSize = UnityHelper.ByteAlign(lastObject.NewOffset + lastObject.NewSize, 8);
+            ObjectInfo lastObject = mObjectInfos.OrderByDescending(o => o.Offset).FirstOrDefault();
+            uint dataSize = UnityHelper.ByteAlign(lastObject.Offset + lastObject.Size, 8);
 
             //Calculate new file size & also cut 20 bytes off the header size because I saw a thing that said to (???)
             uint newFileSize = NewDataStart + dataSize;
